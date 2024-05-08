@@ -22,35 +22,8 @@ exports.getAllBooks = async (req,res,next)=>{
         });
         
     } catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             status:'fail',
-            message: error.message
-        })
-    }
-};
-
-exports.getBook = async (req,res,next)=>{
-    try {
-        let id = req.params.id;
-        const book = await Books.findById(id);
-
-        if(!book) {
-            res.status(404).json({
-                status : 'success',
-                message : "Book not found"
-            });
-
-            return;
-        }
-
-        res.status(200).json({
-            status : 'success',
-            data : book
-        });
-        
-    } catch (error) {
-        res.status(400).json({
-            status:'error',
             message: error.message
         })
     }
@@ -68,7 +41,7 @@ exports.createBook = async (req,res,next)=>{
         });
 
     } catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             status:'fail',
             message: error.message
         })
@@ -96,7 +69,7 @@ exports.updateBook = async (req,res,next)=>{
         });
         
     } catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             status:'fail',
             message: error.message
         })
@@ -124,10 +97,46 @@ exports.deleteBook = async (req,res,next)=>{
         });
 
     } catch (error) {
-        res.status(400).json({
+        res.status(500).json({
             status:'fail',
             message: error.message
         })
     }
 };
 
+exports.filterBooks = async(req,res,next)=>{
+    try {
+        const {author , year} = req.query;
+
+        const filter = {};
+        if(author) {
+            filter.author = author;
+        }
+
+        if(year) {
+            filter.publicationYear = year;
+        }
+
+        const books = await Books.find(filter);
+
+        if(books.length === 0) {
+            res.status(404).json({
+                status : "error",
+                message: "No book found!"
+            })
+
+            return;
+        }
+
+        res.status(200).json({
+            status : 'success',
+            data : books
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            status:'fail',
+            message: error.message
+        })
+    }
+}

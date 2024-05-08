@@ -5,7 +5,7 @@ const util = require('util');
 
 const signToken = id => {
     return jwt.sign({id}, config.secret, {
-        expiresIn: 120
+        expiresIn: config.loginExpire
     });
 }
 
@@ -109,14 +109,13 @@ exports.protect = async (req, res, next) => {
     const user = await User.findById(decodedToken.id);
 
     if(!user) {
-        res.status(401).json({
+        res.status(404).json({
             status: 'fail',
             message: 'User with given token doesnot exist'
         })
 
         return;
     }
-
 
     next();
 }
