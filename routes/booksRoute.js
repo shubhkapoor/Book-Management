@@ -5,8 +5,8 @@ const bookController = require('../controllers/bookController/bookController');
 const authController = require('../controllers/authController/authController');
 
 
-router.route('/getAllBooks').get(authController.protect , bookController.getAllBooks);
-router.route('/getBook/:id').get(authController.protect , bookController.getBook);
+router.route('/').get(authController.protect , bookController.getAllBooks);
+router.route('/:id').get(authController.protect , bookController.getBook);
 router.route('/createBook').post(authController.protect , bookController.createBook);
 router.route('/:id').put(authController.protect , bookController.updateBook);
 router.route('/:id').delete(authController.protect , bookController.deleteBook);
